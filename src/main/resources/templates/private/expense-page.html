@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Transactions</title>
+    <link href="/css/private/expense-page.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-container">
+            <div class="header__text">
+                <h2>Expense Transactions</h2>
+            </div>
+            <div class="header__statistics">
+                <span>Total Expenses: $[[${totalExpenses}]] | This Month: $[[${monthExpenses}]]</span>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <a href="/account" class="tab__link">
+                    <span>All Transactions</span>
+                </a>
+                <a href="/account/income" class="tab__link">
+                    <span>Income</span>
+                </a>
+                <a href="/account/expense" class="tab__link tab__link--active">
+                    <span>Expenses</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13H5v-2h14v2z"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Total Expenses</h3>
+                    <span class="dashboard-card__amount amount--negative">
+                        $[[${totalExpenses}]]
+                    </span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 13h8v-2H8v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Monthly Average</h3>
+                    <span class="dashboard-card__amount amount--negative">
+                        $[[${averageExpense}]]
+                    </span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Transactions</h3>
+                    <span class="dashboard-card__text">
+                        <span th:if="${expenseRecords != null}">[[${expenseRecords.size()}]] expense records</span>
+                        <span th:if="${expenseRecords == null}">0 expense records</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="quick-actions__buttons">
+                <a href="/account/expense/add" class="quick-action__button quick-action__button--expense">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M19 13H5v-2h14v2z"></path>
+                    </svg>
+                    Add Expense
+                </a>
+                <a href="/account/transactions" class="quick-action__button quick-action__button--secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                    </svg>
+                    View All
+                </a>
+            </div>
+        </div>
+
+        <div class="transactions-section">
+            <div class="section-header">
+                <h3>Expense History</h3>
+                <div class="filter-controls">
+                    <select class="filter-select">
+                        <option>All Categories</option>
+                        <option>Food</option>
+                        <option>Transport</option>
+                        <option>Entertainment</option>
+                        <option>Utilities</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Если список пустой -->
+            <div th:if="${expenseRecords == null or expenseRecords.isEmpty()}" class="hint">
+                <span>No expense records found. Add your first expense transaction!</span>
+            </div>
+
+            <!-- Если список не пустой -->
+            <div th:if="${expenseRecords != null and !expenseRecords.isEmpty()}" class="transactions-list">
+                <div th:each="expense : ${expenseRecords}" class="transaction-item transaction-item--expense">
+                    <div class="transaction-item__icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#e74c3c">
+                            <path d="M19 13H5v-2h14v2z"></path>
+                        </svg>
+                    </div>
+                    <div class="transaction-item__info">
+                        <div class="transaction-item__description" th:text="${expense.description ?: 'No description'}"></div>
+                        <div class="transaction-item__details">
+                            <span class="transaction-item__category" th:text="${expense.category}"></span>
+                            <span class="transaction-item__date" th:text="${#temporals.format(expense.date, 'dd MMM yyyy')}"></span>
+                        </div>
+                    </div>
+                    <div class="transaction-item__amount amount--negative">
+                        -$[[${#numbers.formatDecimal(expense.amount, 1, 2)}]]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Пагинация -->
+            <div th:if="${expenseRecords != null and !expenseRecords.isEmpty()}" class="pagination">
+                <button class="pagination-button">Previous</button>
+                <span class="pagination-info">Page 1 of 1</span>
+                <button class="pagination-button">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

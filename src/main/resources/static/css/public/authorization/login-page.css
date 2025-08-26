@@ -1,0 +1,369 @@
+/* Основные сбросы и настройки */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+/* Контейнер */
+.page-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+}
+
+/* Заголовок */
+.header-container {
+    margin-bottom: 30px;
+}
+
+.header-container__text {
+    font-size: 2.2em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Форма */
+.form-container {
+    margin-bottom: 25px;
+}
+
+.form-container__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-container__input-wrapper {
+    position: relative;
+}
+
+.form-container__input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.form-container__input:focus {
+    outline: none;
+    border-color: #27ae60;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+.form-container__input::placeholder {
+    color: #95a5a6;
+}
+
+/* Валидация */
+.form-container__input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: #e74c3c;
+}
+
+.form-container__input:valid:not(:focus):not(:placeholder-shown) {
+    border-color: #2ecc71;
+}
+
+/* Кнопка - ЗЕЛЕНАЯ как в регистрации */
+.form-container__button-wrapper {
+    margin-top: 15px;
+}
+
+.form-container__button {
+    width: 100%;
+    background: linear-gradient(45deg, #27ae60, #2ecc71);
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.form-container__button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(45deg, #229954, #27ae60);
+}
+
+.form-container__button:active {
+    transform: translateY(-1px);
+}
+
+.form-container__button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Футер с ссылкой */
+.footer-link-container {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ecf0f1;
+}
+
+.footer-link-container__text {
+    color: #7f8c8d;
+    font-size: 1em;
+}
+
+.footer-link-container__link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.footer-link-container__link:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.container {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.form-container__input-wrapper:nth-child(1) .form-container__input {
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.form-container__input-wrapper:nth-child(2) .form-container__input {
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.form-container__button {
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.footer-link-container {
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+/* Анимация для ошибок */
+.form-container__input.error {
+    border-color: #e74c3c;
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Индикаторы валидации */
+.form-container__input-wrapper {
+    position: relative;
+}
+
+.form-container__input-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.form-container__input-wrapper:has(.form-container__input:valid:not(:focus):not(:placeholder-shown))::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232ecc71'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    opacity: 1;
+}
+
+.form-container__input-wrapper:has(.form-container__input:invalid:not(:focus):not(:placeholder-shown))::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e74c3c'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z'/%3E%3C/svg%3E");
+    opacity: 1;
+}
+
+/* Стили для предупреждений */
+.form-container__warning-wrapper {
+    margin-top: 10px;
+}
+
+.form-container__warning {
+    color: #e74c3c;
+    font-size: 0.9em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-container__warning::before {
+    content: '⚠';
+    font-size: 1.1em;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px 25px;
+        margin: 20px;
+    }
+
+    .header-container__text {
+        font-size: 1.8em;
+    }
+
+    .form-container__input {
+        padding: 12px 18px;
+        font-size: 0.95em;
+    }
+
+    .form-container__button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+
+    .footer-link-container__text {
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 25px 20px;
+    }
+
+    .header-container__text {
+        font-size: 1.5em;
+    }
+
+    .form-container__input {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+
+    .form-container__button {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    .footer-link-container__text {
+        font-size: 0.9em;
+    }
+}
+
+/* Состояния загрузки */
+.form-container__button.loading {
+    position: relative;
+    color: transparent;
+}
+
+.form-container__button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Плавные переходы */
+.form-container__input,
+.form-container__button,
+.footer-link-container__link {
+    transition: all 0.3s ease;
+}
+
+/* Фокус состояния для доступности */
+.form-container__input:focus,
+.form-container__button:focus,
+.footer-link-container__link:focus {
+    outline: 2px solid #27ae60;
+    outline-offset: 2px;
+}
+
+/* Улучшенная читаемость placeholder */
+.form-container__input::-webkit-input-placeholder {
+    color: #95a5a6;
+    opacity: 1;
+}
+
+.form-container__input::-moz-placeholder {
+    color: #95a5a6;
+    opacity: 1;
+}
+
+.form-container__input:-ms-input-placeholder {
+    color: #95a5a6;
+    opacity: 1;
+}
+
+.form-container__input::-ms-input-placeholder {
+    color: #95a5a6;
+    opacity: 1;
+}
+
+.form-container__input::placeholder {
+    color: #95a5a6;
+    opacity: 1;
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Financial accounting</title>
+    <link href="/css/private/account-page.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-container">
+            <div class="header__text">
+                <h2>Financial accounting</h2>
+            </div>
+            <div class="header__statistics">
+                <span>Total income: $[[${totalIncome}]] | Total expenses: $[[${totalExpense}]]</span>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <a href="/account" class="tab__link tab__link--active">
+                    <span>All Transactions</span>
+                </a>
+                <a href="/account/income" class="tab__link">
+                    <span>Income</span>
+                </a>
+                <a href="/account/expense" class="tab__link">
+                    <span>Expenses</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Total Balance</h3>
+                    <span class="dashboard-card__amount" th:classappend="${totalBalance >= 0 ? 'amount--positive' : 'amount--negative'}">
+                        $[[${totalBalance}]]
+                    </span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>This Month</h3>
+                    <span class="dashboard-card__amount amount--positive">
+                        +$[[${monthIncome}]]
+                    </span>
+                    <span class="dashboard-card__amount amount--negative">
+                        -$[[${monthExpenses}]]
+                    </span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Recent Activity</h3>
+                    <span class="dashboard-card__text">[[${recentTransactionsCount}]] transactions</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="quick-actions__buttons">
+                <a href="/account/income/add" class="quick-action__button quick-action__button--income">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                    </svg>
+                    Add Income
+                </a>
+                <a href="/account/expense/add" class="quick-action__button quick-action__button--expense">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M19 13H5v-2h14v2z"></path>
+                    </svg>
+                    Add Expense
+                </a>
+            </div>
+        </div>
+
+        <div class="recent-transactions">
+            <h3>Recent Transactions</h3>
+
+            <!-- Если список пустой или null -->
+            <div th:if="${recentTransactions == null or recentTransactions.isEmpty()}" class="hint">
+                <span>No recent transactions. Add your first transaction!</span>
+            </div>
+
+            <!-- Если список не пустой -->
+            <div th:if="${recentTransactions != null and !recentTransactions.isEmpty()}" class="transactions-list">
+                <div th:each="transaction: ${recentTransactions}" class="transaction-item">
+                    <div class="transaction-item__icon">
+                        <svg th:if="${transaction.type == 'INCOME'}" width="20" height="20" viewBox="0 0 24 24" fill="#27ae60">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                        <svg th:if="${transaction.type == 'EXPENSE'}" width="20" height="20" viewBox="0 0 24 24" fill="#e74c3c">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="transaction-item__info">
+                        <div class="transaction-item__description" th:text="${transaction.description}"></div>
+                        <div class="transaction-item__details">
+                            <span class="transaction-item__category" th:text="${transaction.category}"></span>
+                            <span class="transaction-item__date" th:text="${#temporals.format(transaction.createdAt, 'dd MMM yyyy')}"></span>
+                        </div>
+                    </div>
+                    <div class="transaction-item__amount"
+                         th:classappend="${transaction.type == 'INCOME' ? 'amount--positive' : 'amount--negative'}"
+                         th:text="${transaction.type == 'INCOME' ? '+' + '$' + transaction.amount : '-' + '$' + transaction.amount}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ссылка "View all transactions" только если список не пустой -->
+            <div th:if="${recentTransactions != null and !recentTransactions.isEmpty()}" class="view-all-container">
+                <a href="/account/transactions" class="view-all-link">View all transactions →</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

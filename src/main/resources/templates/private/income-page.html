@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Transactions</title>
+    <link href="/css/private/income-page.css" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="container">
+        <div class="header-container">
+            <div class="header__text">
+                <h2>Income Transactions</h2>
+            </div>
+            <div class="header__statistics">
+                <span>Total Income: $[[${totalIncome}]] | This Month: $[[${monthTotal}]]</span>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <a href="/account" class="tab__link">
+                    <span>All Transactions</span>
+                </a>
+                <a href="/account/income" class="tab__link tab__link--active">
+                    <span>Income</span>
+                </a>
+                <a href="/account/expense" class="tab__link">
+                    <span>Expenses</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Total Income</h3>
+                    <span class="dashboard-card__amount amount--positive">
+                        $[[${filteredTotalIncome}]]
+                    </span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 13h8v-2H8v2zM20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Monthly Average</h3>
+                    <span class="dashboard-card__amount amount--positive">
+                        $[[${averageIncome}]]
+                    </span>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                    </svg>
+                </div>
+                <div class="dashboard-card__content">
+                    <h3>Transactions</h3>
+                    <!-- Исправленная строка: проверка на null -->
+                    <span class="dashboard-card__text" th:text="${incomeRecords != null ? incomeRecords.size() : 0} + ' income records'"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="quick-actions__buttons">
+                <a href="/account/income/add" class="quick-action__button quick-action__button--income">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                    </svg>
+                    Add Income
+                </a>
+            </div>
+        </div>
+
+        <div class="transactions-section">
+            <div class="section-header">
+                <h3>Income History</h3>
+                <div class="filter-controls">
+                    <select class="filter-select" onchange="filterByCategory(this)">
+                        <option value="" th:selected="${selectedCategory == null or selectedCategory == ''}">
+                            All Categories
+                        </option>
+
+                        <option th:each="category : ${incomeCategories}"
+                                th:value="${category.name()}"
+                                th:text="${category.displayName}"
+                                th:selected="${selectedCategory == category.name()}">
+                        </option>
+                    </select>
+
+                    <script>
+                        function filterByCategory(select) {
+                            const selectedCategory = select.value;
+                            let url = '/account/income';
+
+                            if (selectedCategory) {
+                                url += '?category=' + encodeURIComponent(selectedCategory);
+                            }
+
+                            window.location.href = url;
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <!-- Если список пустой -->
+            <div th:if="${incomeRecords == null or incomeRecords.isEmpty()}" class="hint">
+                <span>No income records found. Add your first income transaction!</span>
+            </div>
+
+            <!-- Если список не пустой -->
+            <div th:if="${incomeRecords != null and !incomeRecords.isEmpty()}" class="transactions-list">
+                <div th:each="income : ${incomeRecords}" class="transaction-item transaction-item--income">
+                    <div class="transaction-item__icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#27ae60">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                        </svg>
+                    </div>
+                    <div class="transaction-item__info">
+                        <div class="transaction-item__description" th:text="${income.description ?: 'No description'}"></div>
+                        <div class="transaction-item__details">
+                            <span class="transaction-item__category" th:text="${income.category}"></span>
+                            <span class="transaction-item__date" th:text="${#temporals.format(income.date, 'dd MMM yyyy')}"></span>
+                        </div>
+                    </div>
+                    <div class="transaction-item__amount amount--positive">
+                        +$[[${#numbers.formatDecimal(income.amount, 1, 2)}]]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Пагинация -->
+            <div th:if="${incomeRecords != null and !incomeRecords.isEmpty()}" class="pagination">
+                <button class="pagination-button">Previous</button>
+                <span class="pagination-info">Page 1 of 1</span>
+                <button class="pagination-button">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

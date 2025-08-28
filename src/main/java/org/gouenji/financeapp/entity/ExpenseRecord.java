@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "expense_records")
-public class ExpenseRecord {
+public class ExpenseRecord implements Record{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +61,7 @@ public class ExpenseRecord {
         this.amount = amount;
     }
 
+    @Override
     public LocalDate getDate() {
         return date;
     }
@@ -75,5 +76,10 @@ public class ExpenseRecord {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String getType() {
+        return "EXPENSE";
     }
 }

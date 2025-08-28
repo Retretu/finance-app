@@ -2,6 +2,7 @@ package org.gouenji.financeapp.controller.secured;
 
 import org.gouenji.financeapp.dto.ExpenseRecordsContainer;
 import org.gouenji.financeapp.dto.IncomeRecordsContainer;
+import org.gouenji.financeapp.entity.Record;
 import org.gouenji.financeapp.entity.enumsRecords.ExpenseCategory;
 import org.gouenji.financeapp.entity.enumsRecords.IncomeCategory;
 import org.gouenji.financeapp.service.records.ExpenseRecordService;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/account")
@@ -37,8 +43,22 @@ public class PrivateAccountController {
     public String getMainPage(Model model) {
         incomeRecordsContainer = incomeRecordService.findAll(null);
         expenseRecordsContainer = expenseRecordService.findAll(null);
+        List<Record> allRecords = Stream.concat(
+                        incomeRecordsContainer.getRecords().stream(),
+                        expenseRecordsContainer.getRecords().stream()
+                )
+                .sorted(Comparator.comparing(Record::getDate).reversed())
+                .toList();
         model.addAttribute("totalIncome", incomeRecordsContainer.getTotal());
         model.addAttribute("totalExpense", expenseRecordsContainer.getTotal());
+        model.addAttribute("totalBalance",
+                incomeRecordsContainer.getTotal() - expenseRecordsContainer.getTotal());
+        model.addAttribute("monthIncome", incomeRecordsContainer.hasMonthTotal() ?
+                incomeRecordsContainer.getMonthTotal() : 0);
+        model.addAttribute("monthExpense", expenseRecordsContainer.hasMonthTotal() ?
+                expenseRecordsContainer.getMonthTotal() : 0);
+        model.addAttribute("recentTransactionsCount", allRecords.size());
+        model.addAttribute("recentTransactions", allRecords);
         return "private/account-page";
     }
 

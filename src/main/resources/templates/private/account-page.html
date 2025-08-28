@@ -57,7 +57,7 @@
                         +$[[${monthIncome}]]
                     </span>
                     <span class="dashboard-card__amount amount--negative">
-                        -$[[${monthExpenses}]]
+                        -$[[${monthExpense}]]
                     </span>
                 </div>
             </div>
@@ -105,10 +105,10 @@
             <div th:if="${recentTransactions != null and !recentTransactions.isEmpty()}" class="transactions-list">
                 <div th:each="transaction: ${recentTransactions}" class="transaction-item">
                     <div class="transaction-item__icon">
-                        <svg th:if="${transaction.type == 'INCOME'}" width="20" height="20" viewBox="0 0 24 24" fill="#27ae60">
+                        <svg th:if="${transaction.getType() == 'INCOME'}" width="20" height="20" viewBox="0 0 24 24" fill="#27ae60">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                         </svg>
-                        <svg th:if="${transaction.type == 'EXPENSE'}" width="20" height="20" viewBox="0 0 24 24" fill="#e74c3c">
+                        <svg th:if="${transaction.getType() == 'EXPENSE'}" width="20" height="20" viewBox="0 0 24 24" fill="#e74c3c">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                         </svg>
                     </div>
@@ -116,19 +116,14 @@
                         <div class="transaction-item__description" th:text="${transaction.description}"></div>
                         <div class="transaction-item__details">
                             <span class="transaction-item__category" th:text="${transaction.category}"></span>
-                            <span class="transaction-item__date" th:text="${#temporals.format(transaction.createdAt, 'dd MMM yyyy')}"></span>
+                            <span class="transaction-item__date" th:text="${#temporals.format(transaction.date, 'dd MMM yyyy')}"></span>
                         </div>
                     </div>
                     <div class="transaction-item__amount"
-                         th:classappend="${transaction.type == 'INCOME' ? 'amount--positive' : 'amount--negative'}"
-                         th:text="${transaction.type == 'INCOME' ? '+' + '$' + transaction.amount : '-' + '$' + transaction.amount}">
+                         th:classappend="${transaction.getType() == 'INCOME' ? 'amount--positive' : 'amount--negative'}"
+                         th:text="${transaction.getType() == 'INCOME' ? '+' + '$' + transaction.amount : '-' + '$' + transaction.amount}">
                     </div>
                 </div>
-            </div>
-
-            <!-- Ссылка "View all transactions" только если список не пустой -->
-            <div th:if="${recentTransactions != null and !recentTransactions.isEmpty()}" class="view-all-container">
-                <a href="/account/transactions" class="view-all-link">View all transactions →</a>
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@
                 <h2>Expense Transactions</h2>
             </div>
             <div class="header__statistics">
-                <span>Total Expenses: $[[${totalExpenses}]] | This Month: $[[${monthExpenses}]]</span>
+                <span>Total Expenses: $[[${totalExpense}]] | This Month: $[[${monthTotal}]]</span>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                 <div class="dashboard-card__content">
                     <h3>Total Expenses</h3>
                     <span class="dashboard-card__amount amount--negative">
-                        $[[${totalExpenses}]]
+                        $[[${filteredTotalExpense}]]
                     </span>
                 </div>
             </div>
@@ -69,10 +69,7 @@
                 </div>
                 <div class="dashboard-card__content">
                     <h3>Transactions</h3>
-                    <span class="dashboard-card__text">
-                        <span th:if="${expenseRecords != null}">[[${expenseRecords.size()}]] expense records</span>
-                        <span th:if="${expenseRecords == null}">0 expense records</span>
-                    </span>
+                    <span class="dashboard-card__text" th:text="${expenseRecords != null ? expenseRecords.size() : 0} + ' expense records'"></span>
                 </div>
             </div>
         </div>
@@ -86,12 +83,6 @@
                     </svg>
                     Add Expense
                 </a>
-                <a href="/account/transactions" class="quick-action__button quick-action__button--secondary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
-                    </svg>
-                    View All
-                </a>
             </div>
         </div>
 
@@ -99,14 +90,30 @@
             <div class="section-header">
                 <h3>Expense History</h3>
                 <div class="filter-controls">
-                    <select class="filter-select">
-                        <option>All Categories</option>
-                        <option>Food</option>
-                        <option>Transport</option>
-                        <option>Entertainment</option>
-                        <option>Utilities</option>
-                        <option>Other</option>
+                    <select class="filter-select" onchange="filterByCategory(this)">
+                        <option value="" th:selected="${selectedCategory == null or selectedCategory == ''}">
+                            All Categories
+                        </option>
+
+                        <option th:each="category : ${expenseCategories}"
+                                th:value="${category.name()}"
+                                th:text="${category.displayName}"
+                                th:selected="${selectedCategory == category.name()}">
+                        </option>
                     </select>
+
+                    <script>
+                        function filterByCategory(select) {
+                            const selectedCategory = select.value;
+                            let url = '/account/expense';
+
+                            if (selectedCategory) {
+                                url += '?category=' + encodeURIComponent(selectedCategory);
+                            }
+
+                            window.location.href = url;
+                        }
+                    </script>
                 </div>
             </div>
 

@@ -27,6 +27,16 @@ public class ExpenseRecord {
     @Column(name = "description")
     private String description;
 
+    public ExpenseRecord() {
+    }
+
+    public ExpenseRecord(ExpenseCategory category, double amount, LocalDate date, String description) {
+        this.category = category;
+        this.amount = amount;
+        this.date = date;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }

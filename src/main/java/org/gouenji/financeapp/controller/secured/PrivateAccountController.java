@@ -2,7 +2,7 @@ package org.gouenji.financeapp.controller.secured;
 
 import org.gouenji.financeapp.dto.ExpenseRecordsContainer;
 import org.gouenji.financeapp.dto.IncomeRecordsContainer;
-import org.gouenji.financeapp.entity.IncomeRecord;
+import org.gouenji.financeapp.entity.enumsRecords.ExpenseCategory;
 import org.gouenji.financeapp.entity.enumsRecords.IncomeCategory;
 import org.gouenji.financeapp.service.records.ExpenseRecordService;
 import org.gouenji.financeapp.service.records.IncomeRecordService;
@@ -36,7 +36,7 @@ public class PrivateAccountController {
     @GetMapping
     public String getMainPage(Model model) {
         incomeRecordsContainer = incomeRecordService.findAll(null);
-        expenseRecordsContainer = expenseRecordService.findAll();
+        expenseRecordsContainer = expenseRecordService.findAll(null);
         model.addAttribute("totalIncome", incomeRecordsContainer.getTotal());
         model.addAttribute("totalExpense", expenseRecordsContainer.getTotal());
         return "private/account-page";
@@ -65,7 +65,7 @@ public class PrivateAccountController {
     }
 
     @PostMapping("/income/add-record")
-    public String addRecord(@RequestParam IncomeCategory category,
+    public String addIncomeRecord(@RequestParam IncomeCategory category,
                             @RequestParam double amount,
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                             @RequestParam(required = false) String description) {
@@ -74,20 +74,37 @@ public class PrivateAccountController {
     }
 
     @GetMapping("/expense")
-    public String getExpensePage(Model model) {
-        expenseRecordsContainer = expenseRecordService.findAll();
+    public String getExpensePage(Model model, @RequestParam(required = false) String category) {
+        expenseRecordsContainer = expenseRecordService.findAll(category);
+        model.addAttribute("expenseRecords", expenseRecordsContainer.getRecords());
         model.addAttribute("totalExpense", expenseRecordsContainer.getTotal());
+        model.addAttribute("filteredTotalExpense", expenseRecordsContainer.hasFilteredTotal() ?
+                expenseRecordsContainer.getFilteredTotal() : expenseRecordsContainer.getTotal());
+        model.addAttribute("expenseCategories", ExpenseCategory.values());
+        model.addAttribute("selectedCategory", category);
+        model.addAttribute("averageExpense", expenseRecordsContainer.hasAverageTotal() ?
+                expenseRecordsContainer.getAverageTotal() : 0);
+        model.addAttribute("monthTotal", expenseRecordsContainer.hasMonthTotal() ?
+                expenseRecordsContainer.getMonthTotal() : 0);
         return "private/expense-page";
+    }
+
+    @GetMapping("/expense/add")
+    public String getExpenseAddPage(Model model) {
+        model.addAttribute("expenseCategories", ExpenseCategory.values());
+        return "private/expense-add-page";
+    }
+
+    @PostMapping("/expense/add-record")
+    public String addExpenseRecord(@RequestParam ExpenseCategory category,
+                            @RequestParam double amount,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                            @RequestParam(required = false) String description) {
+        expenseRecordService.saveRecord(category, amount, date, description);
+        return "redirect:/account/expense";
     }
 }
 
-
-//
-////    @PostMapping("/make-record-done")
-////    public String makeRecordDone(@RequestParam int id) {
-////        recordService.updateRecordStatus(id, RecordStatus.DONE);
-////        return "redirect:/account";
-////    }
 //
 //    @PostMapping("/delete-record")
 //    public String deleteRecord(@RequestParam int id) {

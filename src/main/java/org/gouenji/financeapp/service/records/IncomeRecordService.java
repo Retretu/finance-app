@@ -2,7 +2,7 @@ package org.gouenji.financeapp.service.records;
 
 import org.gouenji.financeapp.entity.IncomeRecord;
 import org.gouenji.financeapp.dto.IncomeRecordsContainer;
-import org.gouenji.financeapp.entity.enumsRecords.IncomeCategory;
+import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 import org.gouenji.financeapp.repository.IncomeRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

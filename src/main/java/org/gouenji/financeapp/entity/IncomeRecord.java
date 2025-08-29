@@ -1,7 +1,7 @@
 package org.gouenji.financeapp.entity;
 
 import jakarta.persistence.*;
-import org.gouenji.financeapp.entity.enumsRecords.IncomeCategory;
+import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 
 import java.time.LocalDate;
 

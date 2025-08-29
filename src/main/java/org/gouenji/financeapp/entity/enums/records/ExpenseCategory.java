@@ -1,4 +1,4 @@
-package org.gouenji.financeapp.entity.enumsRecords;
+package org.gouenji.financeapp.entity.enums.records;
 
 public enum ExpenseCategory{
     FOOD("Food"),

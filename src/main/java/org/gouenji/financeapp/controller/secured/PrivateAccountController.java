@@ -3,8 +3,8 @@ package org.gouenji.financeapp.controller.secured;
 import org.gouenji.financeapp.dto.ExpenseRecordsContainer;
 import org.gouenji.financeapp.dto.IncomeRecordsContainer;
 import org.gouenji.financeapp.entity.Record;
-import org.gouenji.financeapp.entity.enumsRecords.ExpenseCategory;
-import org.gouenji.financeapp.entity.enumsRecords.IncomeCategory;
+import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
+import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 import org.gouenji.financeapp.service.records.ExpenseRecordService;
 import org.gouenji.financeapp.service.records.IncomeRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller

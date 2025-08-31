@@ -1,13 +1,13 @@
-package org.gouenji.financeapp.entity;
+package org.gouenji.financeapp.entity.records;
 
 import jakarta.persistence.*;
-import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
+import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "income_records")
-public class IncomeRecord implements Record{
+@Table(name = "expense_records")
+public class ExpenseRecord implements Record{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +15,8 @@ public class IncomeRecord implements Record{
     private int id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
-    private IncomeCategory category;
+    @Column(name = "category", nullable = false, length = 35)
+    private ExpenseCategory category;
 
     @Column(name = "amount", nullable = false)
     private double amount;
@@ -24,13 +24,13 @@ public class IncomeRecord implements Record{
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 100)
     private String description;
 
-    public IncomeRecord() {
+    public ExpenseRecord() {
     }
 
-    public IncomeRecord(IncomeCategory category, double amount, LocalDate date, String description) {
+    public ExpenseRecord(ExpenseCategory category, double amount, LocalDate date, String description) {
         this.category = category;
         this.amount = amount;
         this.date = date;
@@ -45,11 +45,11 @@ public class IncomeRecord implements Record{
         this.id = id;
     }
 
-    public IncomeCategory getCategory() {
+    public ExpenseCategory getCategory() {
         return category;
     }
 
-    public void setCategory(IncomeCategory category) {
+    public void setCategory(ExpenseCategory category) {
         this.category = category;
     }
 
@@ -80,6 +80,6 @@ public class IncomeRecord implements Record{
 
     @Override
     public String getType() {
-        return "INCOME";
+        return "EXPENSE";
     }
 }

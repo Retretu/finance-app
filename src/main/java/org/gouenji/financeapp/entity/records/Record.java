@@ -1,4 +1,4 @@
-package org.gouenji.financeapp.entity;
+package org.gouenji.financeapp.entity.records;
 
 import java.time.LocalDate;
 

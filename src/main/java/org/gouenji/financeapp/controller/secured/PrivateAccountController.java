@@ -2,7 +2,7 @@ package org.gouenji.financeapp.controller.secured;
 
 import org.gouenji.financeapp.dto.ExpenseRecordsContainer;
 import org.gouenji.financeapp.dto.IncomeRecordsContainer;
-import org.gouenji.financeapp.entity.Record;
+import org.gouenji.financeapp.entity.records.Record;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 import org.gouenji.financeapp.service.records.ExpenseRecordService;
@@ -82,11 +82,11 @@ public class PrivateAccountController {
         return "private/income-add-page";
     }
 
-    @PostMapping("/income/add-record")
+    @PostMapping("/income/add")
     public String addIncomeRecord(@RequestParam IncomeCategory category,
-                            @RequestParam double amount,
-                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                            @RequestParam(required = false) String description) {
+                                  @RequestParam double amount,
+                                  @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                  @RequestParam(required = false) String description) {
         incomeRecordService.saveRecord(category, amount, date, description);
         return "redirect:/account/income";
     }
@@ -113,7 +113,7 @@ public class PrivateAccountController {
         return "private/expense-add-page";
     }
 
-    @PostMapping("/expense/add-record")
+    @PostMapping("/expense/add")
     public String addExpenseRecord(@RequestParam ExpenseCategory category,
                             @RequestParam double amount,
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -122,11 +122,3 @@ public class PrivateAccountController {
         return "redirect:/account/expense";
     }
 }
-
-//
-//    @PostMapping("/delete-record")
-//    public String deleteRecord(@RequestParam int id) {
-//        recordService.deleteRecord(id);
-//        return "redirect:/account";
-//    }
-//}

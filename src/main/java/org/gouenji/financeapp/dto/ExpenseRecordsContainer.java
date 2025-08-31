@@ -1,6 +1,6 @@
 package org.gouenji.financeapp.dto;
 
-import org.gouenji.financeapp.entity.ExpenseRecord;
+import org.gouenji.financeapp.entity.records.ExpenseRecord;
 
 import java.util.List;
 

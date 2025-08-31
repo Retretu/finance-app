@@ -1,13 +1,13 @@
-package org.gouenji.financeapp.entity;
+package org.gouenji.financeapp.entity.records;
 
 import jakarta.persistence.*;
-import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
+import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "expense_records")
-public class ExpenseRecord implements Record{
+@Table(name = "income_records")
+public class IncomeRecord implements Record{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +15,8 @@ public class ExpenseRecord implements Record{
     private int id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category", nullable = false)
-    private ExpenseCategory category;
+    @Column(name = "category", nullable = false, length = 35)
+    private IncomeCategory category;
 
     @Column(name = "amount", nullable = false)
     private double amount;
@@ -24,13 +24,13 @@ public class ExpenseRecord implements Record{
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 100)
     private String description;
 
-    public ExpenseRecord() {
+    public IncomeRecord() {
     }
 
-    public ExpenseRecord(ExpenseCategory category, double amount, LocalDate date, String description) {
+    public IncomeRecord(IncomeCategory category, double amount, LocalDate date, String description) {
         this.category = category;
         this.amount = amount;
         this.date = date;
@@ -45,11 +45,11 @@ public class ExpenseRecord implements Record{
         this.id = id;
     }
 
-    public ExpenseCategory getCategory() {
+    public IncomeCategory getCategory() {
         return category;
     }
 
-    public void setCategory(ExpenseCategory category) {
+    public void setCategory(IncomeCategory category) {
         this.category = category;
     }
 
@@ -80,6 +80,6 @@ public class ExpenseRecord implements Record{
 
     @Override
     public String getType() {
-        return "EXPENSE";
+        return "INCOME";
     }
 }

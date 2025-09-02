@@ -28,13 +28,15 @@ public class IncomeRecordService {
 
     @Transactional(readOnly = true)
     public IncomeRecordsContainer findAll(String filterMode) {
-        List<IncomeRecord> incomeRecords = incomeRecordRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        List<IncomeRecord> incomeRecords = incomeRecordRepository
+                .findAllByUserIdOrderByDateDesc(userService.getCurrentUserId());
         double total = incomeRecords.stream()
                 .mapToDouble(IncomeRecord::getAmount)
                 .sum();
         double averageTotal = (double) Math.round( total / 12 * 100) / 100;
         double monthTotal = incomeRecordRepository
-                .findAllByYearAndMonth(LocalDate.now().getYear(), LocalDate.now().getMonthValue()).stream()
+                .findAllByYearAndMonthAndUser(LocalDate.now().getYear(),
+                        LocalDate.now().getMonthValue(), userService.getCurrentUser()).stream()
                 .mapToDouble(IncomeRecord::getAmount)
                 .sum();
         if(filterMode == null || filterMode.isEmpty() || filterMode.equals("All categories")) {

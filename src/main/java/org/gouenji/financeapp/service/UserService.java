@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
                         "User not found with email: " + authentication.getName()));
     }
 
+    public int getCurrentUserId() {
+        return getCurrentUser().getId();
+    }
+
     public void save(User user) {
         userRepository.save(user);
     }

@@ -4,6 +4,7 @@ import org.gouenji.financeapp.dto.records.ExpenseRecordsContainer;
 import org.gouenji.financeapp.entity.records.ExpenseRecord;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 import org.gouenji.financeapp.repository.ExpenseRecordRepository;
+import org.gouenji.financeapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ import java.util.List;
 @Transactional
 public class ExpenseRecordService {
     private final ExpenseRecordRepository expenseRecordRepository;
+    private final UserService userService;
 
     @Autowired
-    public ExpenseRecordService(ExpenseRecordRepository expenseRecordRepository) {
+    public ExpenseRecordService(ExpenseRecordRepository expenseRecordRepository, UserService userService) {
         this.expenseRecordRepository = expenseRecordRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -70,8 +73,11 @@ public class ExpenseRecordService {
         }
     }
 
-    public void saveRecord(ExpenseCategory category, double amount, LocalDate date, String description){
-        expenseRecordRepository.save(new ExpenseRecord(category, amount, date, description));
+    public void saveRecord(ExpenseCategory category,
+                           double amount,
+                           LocalDate date,
+                           String description){
+        expenseRecordRepository.save(new ExpenseRecord(category, amount, date, description, userService.getCurrentUser()));
     }
 
 

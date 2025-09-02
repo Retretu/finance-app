@@ -1,6 +1,7 @@
 package org.gouenji.financeapp.entity.records;
 
 import jakarta.persistence.*;
+import org.gouenji.financeapp.entity.User;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 
 import java.time.LocalDate;
@@ -27,14 +28,23 @@ public class ExpenseRecord implements Record{
     @Column(name = "description", length = 100)
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public ExpenseRecord() {
     }
 
-    public ExpenseRecord(ExpenseCategory category, double amount, LocalDate date, String description) {
+    public ExpenseRecord(ExpenseCategory category,
+                         double amount,
+                         LocalDate date,
+                         String description,
+                         User user) {
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.description = description;
+        this.user = user;
     }
 
     public int getId() {
@@ -81,5 +91,13 @@ public class ExpenseRecord implements Record{
     @Override
     public String getType() {
         return "EXPENSE";
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,6 +1,7 @@
 package org.gouenji.financeapp.entity.records;
 
 import jakarta.persistence.*;
+import org.gouenji.financeapp.entity.User;
 import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 
 import java.time.LocalDate;
@@ -27,14 +28,23 @@ public class IncomeRecord implements Record{
     @Column(name = "description", length = 100)
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public IncomeRecord() {
     }
 
-    public IncomeRecord(IncomeCategory category, double amount, LocalDate date, String description) {
+    public IncomeRecord(IncomeCategory category,
+                        double amount,
+                        LocalDate date,
+                        String description,
+                        User user) {
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.description = description;
+        this.user = user;
     }
 
     public int getId() {
@@ -81,5 +91,13 @@ public class IncomeRecord implements Record{
     @Override
     public String getType() {
         return "INCOME";
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

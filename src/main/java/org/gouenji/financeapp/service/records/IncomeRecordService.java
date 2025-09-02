@@ -4,6 +4,7 @@ import org.gouenji.financeapp.entity.records.IncomeRecord;
 import org.gouenji.financeapp.dto.records.IncomeRecordsContainer;
 import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 import org.gouenji.financeapp.repository.IncomeRecordRepository;
+import org.gouenji.financeapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ import java.util.List;
 @Transactional
 public class IncomeRecordService {
     private final IncomeRecordRepository incomeRecordRepository;
+    private final UserService userService;
 
     @Autowired
-    public IncomeRecordService(IncomeRecordRepository incomeRecordRepository) {
+    public IncomeRecordService(IncomeRecordRepository incomeRecordRepository, UserService userService) {
         this.incomeRecordRepository = incomeRecordRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -70,8 +73,11 @@ public class IncomeRecordService {
         }
     }
 
-    public void saveRecord(IncomeCategory category, double amount, LocalDate date, String description) {
-        incomeRecordRepository.save(new IncomeRecord(category, amount, date, description));
+    public void saveRecord(IncomeCategory category,
+                           double amount,
+                           LocalDate date,
+                           String description) {
+        incomeRecordRepository.save(new IncomeRecord(category, amount, date, description, userService.getCurrentUser()));
     }
 
     public void deleteRecord(int id) {

@@ -2,7 +2,9 @@ package org.gouenji.financeapp.service;
 
 import org.gouenji.financeapp.entity.User;
 import org.gouenji.financeapp.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,6 +43,13 @@ public class UserService implements UserDetailsService {
                 user.getPassword(),
                 authorities
         );
+    }
+
+    public User getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return findByEmail(authentication.getName())
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User not found with email: " + authentication.getName()));
     }
 
     public void save(User user) {

@@ -1,4 +1,4 @@
-package org.gouenji.financeapp.dto;
+package org.gouenji.financeapp.dto.records;
 
 import org.gouenji.financeapp.entity.records.IncomeRecord;
 

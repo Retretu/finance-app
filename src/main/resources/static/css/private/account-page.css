@@ -366,3 +366,78 @@ body {
         font-size: 0.9em;
     }
 }
+
+/* Стили для формы выхода */
+.logout-form {
+    display: inline-block;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: #f8f9fa;
+    color: #7f8c8d;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background: #ecf0f1;
+    color: #2c3e50;
+    transform: translateY(-1px);
+}
+
+.logout-button:active {
+    transform: translateY(0);
+}
+
+.logout-button svg {
+    color: #7f8c8d;
+    transition: color 0.3s ease;
+}
+
+.logout-button:hover svg {
+    color: #e74c3c;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .logout-button {
+        padding: 7px 12px;
+        font-size: 0.85em;
+    }
+
+    .logout-button svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logout-button {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+
+    .logout-button span {
+        display: none;
+    }
+
+    .logout-button {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+        background: transparent;
+    }
+
+    .logout-button:hover {
+        background: #ecf0f1;
+    }
+}

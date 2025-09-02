@@ -1,7 +1,7 @@
 package org.gouenji.financeapp.controller.secured;
 
-import org.gouenji.financeapp.dto.ExpenseRecordsContainer;
-import org.gouenji.financeapp.dto.IncomeRecordsContainer;
+import org.gouenji.financeapp.dto.records.ExpenseRecordsContainer;
+import org.gouenji.financeapp.dto.records.IncomeRecordsContainer;
 import org.gouenji.financeapp.entity.records.Record;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 import org.gouenji.financeapp.entity.enums.records.IncomeCategory;

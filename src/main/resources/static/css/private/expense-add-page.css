@@ -168,6 +168,19 @@ body {
     box-shadow: 0 6px 20px rgba(149, 165, 166, 0.4);
 }
 
+/* НОВЫЕ СТИЛИ ДЛЯ КНОПКИ УДАЛЕНИЯ */
+.btn-danger {
+    background: linear-gradient(45deg, #c0392b, #e74c3c); /* Красный градиент, подходящий к теме */
+    color: white;
+    box-shadow: 0 4px 15px rgba(192, 57, 43, 0.3); /* Тень с цветом кнопки */
+}
+
+.btn-danger:hover {
+    background: linear-gradient(45deg, #a5281b, #c0392b); /* Более темный градиент при наведении */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(192, 57, 43, 0.4); /* Более выраженная тень при наведении */
+}
+
 /* Валидация */
 .form-input:invalid, .form-select:invalid {
     border-color: #e74c3c;
@@ -221,7 +234,8 @@ body {
         flex-direction: column;
     }
 
-    .btn {
+    /* На мобильных устройствах все кнопки, включая удаление, занимают всю ширину */
+    .btn, .btn-danger {
         width: 100%;
     }
 }

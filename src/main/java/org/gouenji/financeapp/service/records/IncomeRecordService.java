@@ -6,7 +6,6 @@ import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
 import org.gouenji.financeapp.repository.IncomeRecordRepository;
 import org.gouenji.financeapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,11 +74,30 @@ public class IncomeRecordService {
         }
     }
 
+    public IncomeRecord findRecord(int id){
+        return incomeRecordRepository.findById(id).orElse(null);
+    }
+
     public void saveRecord(IncomeCategory category,
                            double amount,
                            LocalDate date,
                            String description) {
         incomeRecordRepository.save(new IncomeRecord(category, amount, date, description, userService.getCurrentUser()));
+    }
+
+    public void updateRecord(int userId,
+                             IncomeCategory category,
+                             double amount,
+                             LocalDate date,
+                             String description){
+        IncomeRecord record = findRecord(userId);
+
+        record.setCategory(category);
+        record.setAmount(amount);
+        record.setDate(date);
+        record.setDescription(description);
+
+        incomeRecordRepository.save(record);
     }
 
     public void deleteRecord(int id) {

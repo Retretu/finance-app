@@ -2,6 +2,8 @@ package org.gouenji.financeapp.controller.secured;
 
 import org.gouenji.financeapp.dto.records.ExpenseRecordsContainer;
 import org.gouenji.financeapp.dto.records.IncomeRecordsContainer;
+import org.gouenji.financeapp.entity.records.ExpenseRecord;
+import org.gouenji.financeapp.entity.records.IncomeRecord;
 import org.gouenji.financeapp.entity.records.Record;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
@@ -11,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -73,13 +72,13 @@ public class PrivateAccountController {
                 incomeRecordsContainer.getAverageTotal() : 0);
         model.addAttribute("monthTotal", incomeRecordsContainer.hasMonthTotal() ?
                 incomeRecordsContainer.getMonthTotal() : 0);
-        return "private/income-page";
+        return "private/income/income-page";
     }
 
     @GetMapping("/income/add")
     public String getIncomeAddPage(Model model) {
         model.addAttribute("incomeCategories", IncomeCategory.values());
-        return "private/income-add-page";
+        return "private/income/income-add-page";
     }
 
     @PostMapping("/income/add")
@@ -88,6 +87,30 @@ public class PrivateAccountController {
                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                   @RequestParam(required = false) String description) {
         incomeRecordService.saveRecord(category, amount, date, description);
+        return "redirect:/account/income";
+    }
+
+    @PostMapping("income/delete/{id}")
+    public String deleteIncomeRecord(@PathVariable("id") int userId) {
+        incomeRecordService.deleteRecord(userId);
+        return "redirect:/account/income";
+    }
+
+    @GetMapping("income/edit/{id}")
+    public String getIncomeEditPage(Model model, @PathVariable("id") int userId) {
+        IncomeRecord incomeRecord = incomeRecordService.findRecord(userId);
+        model.addAttribute("income", incomeRecord);
+        model.addAttribute("incomeCategories", IncomeCategory.values());
+        return "private/income/income-edit-page";
+    }
+
+    @PostMapping("income/edit/{id}")
+    public String editIncomeRecord(@PathVariable("id") int userId,
+                                    @RequestParam IncomeCategory category,
+                                    @RequestParam double amount,
+                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                    @RequestParam(required = false) String description){
+        incomeRecordService.updateRecord(userId, category, amount, date, description);
         return "redirect:/account/income";
     }
 
@@ -104,13 +127,13 @@ public class PrivateAccountController {
                 expenseRecordsContainer.getAverageTotal() : 0);
         model.addAttribute("monthTotal", expenseRecordsContainer.hasMonthTotal() ?
                 expenseRecordsContainer.getMonthTotal() : 0);
-        return "private/expense-page";
+        return "private/expense/expense-page";
     }
 
     @GetMapping("/expense/add")
     public String getExpenseAddPage(Model model) {
         model.addAttribute("expenseCategories", ExpenseCategory.values());
-        return "private/expense-add-page";
+        return "private/expense/expense-add-page";
     }
 
     @PostMapping("/expense/add")
@@ -119,6 +142,30 @@ public class PrivateAccountController {
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                             @RequestParam(required = false) String description) {
         expenseRecordService.saveRecord(category, amount, date, description);
+        return "redirect:/account/expense";
+    }
+
+    @PostMapping("expense/delete/{id}")
+    public String deleteExpenseRecord(@PathVariable("id") int userId) {
+        expenseRecordService.deleteRecord(userId);
+        return "redirect:/account/expense";
+    }
+
+    @GetMapping("expense/edit/{id}")
+    public String getExpenseEditPage(Model model, @PathVariable("id") int userId) {
+        ExpenseRecord expenseRecord = expenseRecordService.findRecord(userId);
+        model.addAttribute("expense", expenseRecord);
+        model.addAttribute("expenseCategories", ExpenseCategory.values());
+        return "private/expense/expense-edit-page";
+    }
+
+    @PostMapping("expense/edit/{id}")
+    public String editExpenseRecord(@PathVariable("id") int userId,
+                                    @RequestParam ExpenseCategory category,
+                                    @RequestParam double amount,
+                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                    @RequestParam(required = false) String description){
+        expenseRecordService.updateRecord(userId, category, amount, date, description);
         return "redirect:/account/expense";
     }
 }

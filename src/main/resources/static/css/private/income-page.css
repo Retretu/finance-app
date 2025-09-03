@@ -490,3 +490,81 @@ body {
         background: #ecf0f1;
     }
 }
+/* Стили для кнопок действий с транзакциями */
+.transaction-item__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background: #f8f9fa;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    padding: 0;
+}
+
+.action-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #d0d0d0;
+}
+
+.action-button--edit:hover {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+}
+
+.action-button--delete:hover {
+    background: #e74c3c;
+    color: white;
+    border-color: #e74c3c;
+}
+
+.action-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Стили для формы удаления */
+.delete-form {
+    margin: 0;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .transaction-item__actions {
+        gap: 6px;
+    }
+
+    .action-button {
+        width: 32px;
+        height: 32px;
+    }
+
+    .action-button svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transaction-item__actions {
+        gap: 5px;
+    }
+
+    .action-button {
+        width: 30px;
+        height: 30px;
+    }
+}

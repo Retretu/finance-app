@@ -144,6 +144,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    min-width: 160px; /* Одинаковая минимальная ширина */
 }
 
 .btn-primary {
@@ -166,6 +167,31 @@ body {
 .btn-secondary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(149, 165, 166, 0.4);
+}
+
+/* Кнопка удаления */
+.btn-danger {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(45deg, #c0392b, #e74c3c);
+}
+
+/* Формы действий */
+.edit-form,
+.delete-form {
+    display: inline;
+}
+
+/* Иконки в кнопках */
+.btn svg {
+    margin-right: 8px;
+    flex-shrink: 0;
 }
 
 /* Валидация */
@@ -223,6 +249,13 @@ body {
 
     .btn {
         width: 100%;
+        min-width: auto; /* Убираем фиксированную ширину на мобильных */
+    }
+
+    .edit-form,
+    .delete-form {
+        width: 100%;
+        display: block;
     }
 }
 

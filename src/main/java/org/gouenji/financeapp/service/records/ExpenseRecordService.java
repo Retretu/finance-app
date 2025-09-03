@@ -3,6 +3,7 @@ package org.gouenji.financeapp.service.records;
 import org.gouenji.financeapp.dto.records.ExpenseRecordsContainer;
 import org.gouenji.financeapp.entity.records.ExpenseRecord;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
+import org.gouenji.financeapp.entity.records.IncomeRecord;
 import org.gouenji.financeapp.repository.ExpenseRecordRepository;
 import org.gouenji.financeapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +76,30 @@ public class ExpenseRecordService {
         }
     }
 
+    public ExpenseRecord findRecord(int id){
+        return expenseRecordRepository.findById(id).orElse(null);
+    }
+
     public void saveRecord(ExpenseCategory category,
                            double amount,
                            LocalDate date,
                            String description){
         expenseRecordRepository.save(new ExpenseRecord(category, amount, date, description, userService.getCurrentUser()));
+    }
+
+    public void updateRecord(int userId,
+                             ExpenseCategory category,
+                             double amount,
+                             LocalDate date,
+                             String description){
+        ExpenseRecord record = findRecord(userId);
+
+        record.setCategory(category);
+        record.setAmount(amount);
+        record.setDate(date);
+        record.setDescription(description);
+
+        expenseRecordRepository.save(record);
     }
 
 

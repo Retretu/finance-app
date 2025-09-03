@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Income Transactions</title>
-    <link href="/css/private/income-page.css" rel="stylesheet">
+    <title>Expense Transactions</title>
+    <link href="/css/private/expense-page.css" rel="stylesheet">
 </head>
 <body>
 <div class="page-wrapper">
     <div class="container">
         <div class="header-container">
             <div class="header__text">
-                <h2>Income Transactions</h2>
+                <h2>Expense Transactions</h2>
             </div>
             <div class="header__statistics">
-                <span>Total Income: $[[${totalIncome}]] | This Month: $[[${monthTotal}]]</span>
+                <span>Total Expenses: $[[${totalExpense}]] | This Month: $[[${monthTotal}]]</span>
             </div>
             <form action="/logout" method="post" class="logout-form">
                 <button type="submit" class="logout-button">
@@ -33,10 +33,10 @@
                 <a href="/account" class="tab__link">
                     <span>All Transactions</span>
                 </a>
-                <a href="/account/income" class="tab__link tab__link--active">
+                <a href="/account/income" class="tab__link">
                     <span>Income</span>
                 </a>
-                <a href="/account/expense" class="tab__link">
+                <a href="/account/expense" class="tab__link tab__link--active">
                     <span>Expenses</span>
                 </a>
             </div>
@@ -46,13 +46,13 @@
             <div class="dashboard-card">
                 <div class="dashboard-card__icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                        <path d="M19 13H5v-2h14v2z"></path>
                     </svg>
                 </div>
                 <div class="dashboard-card__content">
-                    <h3>Total Income</h3>
-                    <span class="dashboard-card__amount amount--positive">
-                        $[[${filteredTotalIncome}]]
+                    <h3>Total Expenses</h3>
+                    <span class="dashboard-card__amount amount--negative">
+                        $[[${filteredTotalExpense}]]
                     </span>
                 </div>
             </div>
@@ -65,8 +65,8 @@
                 </div>
                 <div class="dashboard-card__content">
                     <h3>Monthly Average</h3>
-                    <span class="dashboard-card__amount amount--positive">
-                        $[[${averageIncome}]]
+                    <span class="dashboard-card__amount amount--negative">
+                        $[[${averageExpense}]]
                     </span>
                 </div>
             </div>
@@ -79,8 +79,7 @@
                 </div>
                 <div class="dashboard-card__content">
                     <h3>Transactions</h3>
-                    <!-- Исправленная строка: проверка на null -->
-                    <span class="dashboard-card__text" th:text="${incomeRecords != null ? incomeRecords.size() : 0} + ' income records'"></span>
+                    <span class="dashboard-card__text" th:text="${expenseRecords != null ? expenseRecords.size() : 0} + ' expense records'"></span>
                 </div>
             </div>
         </div>
@@ -88,25 +87,25 @@
         <div class="quick-actions">
             <h3>Quick Actions</h3>
             <div class="quick-actions__buttons">
-                <a href="/account/income/add" class="quick-action__button quick-action__button--income">
+                <a href="/account/expense/add" class="quick-action__button quick-action__button--expense">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                        <path d="M19 13H5v-2h14v2z"></path>
                     </svg>
-                    Add Income
+                    Add Expense
                 </a>
             </div>
         </div>
 
         <div class="transactions-section">
             <div class="section-header">
-                <h3>Income History</h3>
+                <h3>Expense History</h3>
                 <div class="filter-controls">
                     <select class="filter-select" onchange="filterByCategory(this)">
                         <option value="" th:selected="${selectedCategory == null or selectedCategory == ''}">
                             All Categories
                         </option>
 
-                        <option th:each="category : ${incomeCategories}"
+                        <option th:each="category : ${expenseCategories}"
                                 th:value="${category.name()}"
                                 th:text="${category.displayName}"
                                 th:selected="${selectedCategory == category.name()}">
@@ -116,7 +115,7 @@
                     <script>
                         function filterByCategory(select) {
                             const selectedCategory = select.value;
-                            let url = '/account/income';
+                            let url = '/account/expense';
 
                             if (selectedCategory) {
                                 url += '?category=' + encodeURIComponent(selectedCategory);
@@ -129,33 +128,56 @@
             </div>
 
             <!-- Если список пустой -->
-            <div th:if="${incomeRecords == null or incomeRecords.isEmpty()}" class="hint">
-                <span>No income records found. Add your first income transaction!</span>
+            <div th:if="${expenseRecords == null or expenseRecords.isEmpty()}" class="hint">
+                <span>No expense records found. Add your first expense transaction!</span>
             </div>
 
             <!-- Если список не пустой -->
-            <div th:if="${incomeRecords != null and !incomeRecords.isEmpty()}" class="transactions-list">
-                <div th:each="income : ${incomeRecords}" class="transaction-item transaction-item--income">
+            <div th:if="${expenseRecords != null and !expenseRecords.isEmpty()}" class="transactions-list">
+                <div th:each="expense : ${expenseRecords}" class="transaction-item transaction-item--expense">
                     <div class="transaction-item__icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#27ae60">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#e74c3c">
+                            <path d="M19 13H5v-2h14v2z"></path>
                         </svg>
                     </div>
                     <div class="transaction-item__info">
-                        <div class="transaction-item__description" th:text="${income.description ?: 'No description'}"></div>
+                        <div class="transaction-item__description" th:text="${expense.description ?: 'No description'}"></div>
                         <div class="transaction-item__details">
-                            <span class="transaction-item__category" th:text="${income.category}"></span>
-                            <span class="transaction-item__date" th:text="${#temporals.format(income.date, 'dd MMM yyyy')}"></span>
+                            <span class="transaction-item__category" th:text="${expense.category}"></span>
+                            <span class="transaction-item__date" th:text="${#temporals.format(expense.date, 'dd MMM yyyy')}"></span>
                         </div>
                     </div>
-                    <div class="transaction-item__amount amount--positive">
-                        +$[[${#numbers.formatDecimal(income.amount, 1, 2)}]]
+                    <div class="transaction-item__amount amount--negative">
+                        -$[[${#numbers.formatDecimal(expense.amount, 1, 2)}]]
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="transaction-item__actions">
+                        <!-- Кнопка редактирования -->
+                        <a th:href="@{/account/expense/edit/{id}(id=${expense.id})}"
+                           class="action-button action-button--edit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+                            </svg>
+                        </a>
+
+                        <!-- Форма для удаления -->
+                        <form th:action="@{/account/expense/delete/{id}(id=${expense.id})}"
+                              method="post"
+                              class="delete-form"
+                              onsubmit="return confirm('Are you sure you want to delete this transaction?')">
+                            <button type="submit" class="action-button action-button--delete">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
 
             <!-- Пагинация -->
-            <div th:if="${incomeRecords != null and !incomeRecords.isEmpty()}" class="pagination">
+            <div th:if="${expenseRecords != null and !expenseRecords.isEmpty()}" class="pagination">
                 <button class="pagination-button">Previous</button>
                 <span class="pagination-info">Page 1 of 1</span>
                 <button class="pagination-button">Next</button>

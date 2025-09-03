@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Expense Transaction</title>
+  <link href="/css/private/expense-add-page.css?v=2" rel="stylesheet">
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="container">
+    <div class="header-container">
+      <div class="header__text">
+        <h2>Edit Expense Transaction</h2>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <!-- Основная форма редактирования -->
+      <form th:action="@{/account/expense/edit/{id}(id=${expense.id})}" method="post" class="expense-form" id="edit-form">
+        <div class="form-group">
+          <label for="category" class="form-label">Category</label>
+          <select id="category" name="category" class="form-select" required>
+            <option value="">Select Category</option>
+            <option th:each="category : ${expenseCategories}"
+                    th:value="${category}"
+                    th:selected="${category == expense.category}"
+                    th:text="${category.displayName}">
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="amount" class="form-label">Amount ($)</label>
+          <input type="number" id="amount" name="amount" class="form-input"
+                 step="0.01" min="0.01" placeholder="Enter amount"
+                 th:value="${expense.amount}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="date" class="form-label">Date</label>
+          <input type="date" id="date" name="date" class="form-input"
+                 th:value="${#temporals.format(expense.date, 'yyyy-MM-dd')}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="form-label">Description (Optional)</label>
+          <textarea id="description" name="description" class="form-textarea"
+                    placeholder="Enter description" th:text="${expense.description}"></textarea>
+        </div>
+      </form> <!-- Закрытие основной формы -->
+
+      <!-- Отдельный блок с кнопками -->
+      <div class="actions-block" style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+        <!-- Кнопка отмены -->
+        <a href="/account/expense" class="btn btn-secondary action-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+          </svg>
+          Cancel
+        </a>
+
+        <!-- Форма удаления -->
+        <form th:action="@{/account/expense/delete/{id}(id=${expense.id})}"
+              method="post"
+              class="delete-form"
+              style="display: inline-block;"
+              onsubmit="return confirm('Are you sure you want to delete this transaction?')">
+          <button type="submit" class="btn btn-danger action-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+            </svg>
+            Delete Expense
+          </button>
+        </form>
+
+        <!-- Кнопка обновления -->
+        <button type="submit" class="btn btn-primary action-btn" form="edit-form">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+          </svg>
+          Update Expense
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Установка сегодняшней даты по умолчанию
+      document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('date');
+        if (dateInput && !dateInput.value) {
+          const today = new Date().toISOString().split('T')[0];
+          dateInput.value = today;
+        }
+      });
+    </script>
+  </div>
+</div>
+</body>
+</html>

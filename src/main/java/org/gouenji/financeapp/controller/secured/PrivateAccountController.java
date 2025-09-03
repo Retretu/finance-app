@@ -59,6 +59,29 @@ public class PrivateAccountController {
         return "private/account-page";
     }
 
+    @PostMapping("/transaction/edit/{id}")
+    public String editTransaction(@PathVariable int id, @RequestParam String type) {
+        if(type.equals("INCOME")) {
+            return "redirect:/account/income/edit/" + id;
+        }else if(type.equals("EXPENSE")) {
+            return "redirect:/account/expense/edit/" + id;
+        }else{
+            return "redirect:/error";
+        }
+    }
+
+    @PostMapping("/transaction/delete/{id}")
+    public String deleteTransaction(@PathVariable("id") int userId, @RequestParam String type) {
+        if(type.equals("INCOME")) {
+            incomeRecordService.deleteRecord(userId);
+        }else if(type.equals("EXPENSE")) {
+            expenseRecordService.deleteRecord(userId);
+        }else{
+            return "redirect:/error";
+        }
+        return "redirect:/account";
+    }
+
     @GetMapping("/income")
     public String getIncomePage(Model model, @RequestParam(required = false) String category) {
         incomeRecordsContainer = incomeRecordService.findAll(category);

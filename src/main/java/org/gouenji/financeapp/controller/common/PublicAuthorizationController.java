@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,9 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Collections;
-import java.util.Set;
 
 @Controller
 public class PublicAuthorizationController {
@@ -85,15 +81,7 @@ public class PublicAuthorizationController {
                                     @RequestParam String password) {
         String encodedPassword = passwordEncoder.encode(password);
         userService.save(new User(name, email, encodedPassword, UserRole.USER));
-        forceAutoLogin(email, encodedPassword);
-        System.out.println("Success registration");
         return "redirect:/login";
-    }
-
-    private void forceAutoLogin(String email, String password) {
-        Set<SimpleGrantedAuthority> roles = Collections.singleton(UserRole.USER.toAuthority());
-        Authentication authentication = new UsernamePasswordAuthenticationToken(email, password, roles);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @PostMapping("/logout")

@@ -229,3 +229,7 @@ finance-app/
 ```
 
 ---
+
+## Персональные контакты
+
+- **Telegram**: @Gouenji_AS

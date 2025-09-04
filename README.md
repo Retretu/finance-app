@@ -193,36 +193,35 @@ finance-app/
 │   │   │   ├── util/
 │   │   │   │   └── JwtTokenUtil.java                       # Утилита для работы с JWT-токенами
 │   │   │   └── FinanceAppApplication.java                  # Главный класс приложения
-│   │   ├── resources/
-│   │   │   ├── static/
-│   │   │   │   └── css/
-│   │   │   │       ├── private/
-│   │   │   │       │   ├── account-page.css                # Стили для страницы аккаунта
-│   │   │   │       │   ├── expense-add-page.css            # Стили для страницы добавления расхода
-│   │   │   │       │   ├── expense-page.css                # Стили для страницы расходов
-│   │   │   │       │   ├── income-add-page.css             # Стили для страницы добавления дохода
-│   │   │   │       │   └── income-page.css                 # Стили для страницы доходов
-│   │   │   │       └── public/
-│   │   │   │           ├── authorization/
-│   │   │   │           │   └── authorization-pages.css     # Стили для страниц авторизации
-│   │   │   │           ├── error/
-│   │   │   │           │   └── error-page.css              # Стили для страницы ошибок
-│   │   │   │           └── home-page.css                   # Стили для главной страницы
-│   │   │   ├── templates/
-│   │   │   │   ├── public/
-│   │   │   │   │   ├── authorization/
-│   │   │   │   │   │   ├── login-page.html                 # Шаблон страницы входа
-│   │   │   │   │   │   └── registration-page.html          # Шаблон страницы регистрации
-│   │   │   │   │   └── error/
-│   │   │   │   │       └── error-page.html                 # Шаблон страницы ошибок
-│   │   │   │   └── private/
-│   │   │   │       ├── account-page.html                   # Шаблон главной страницы аккаунта
-│   │   │   │       ├── expense-add-page.html               # Шаблон страницы добавления расхода
-│   │   │   │       ├── expense-page.html                   # Шаблон страницы расходов
-│   │   │   │       ├── income-add-page.html                # Шаблон страницы добавления дохода
-│   │   │   │       └── income-page.html                    # Шаблон страницы доходов
-│   │   │   └── application.properties                      # Основные настройки приложения
-│   │   └── webapp/                                         # Папка для веб-ресурсов (не используется в Spring Boot)
+│   │   └── resources/
+│   │       ├── static/
+│   │       │   └── css/
+│   │       │       ├── private/
+│   │       │       │   ├── account-page.css                # Стили для страницы аккаунта
+│   │       │       │   ├── expense-add-page.css            # Стили для страницы добавления расхода
+│   │       │       │   ├── expense-page.css                # Стили для страницы расходов
+│   │       │       │   ├── income-add-page.css             # Стили для страницы добавления дохода
+│   │       │       │   └── income-page.css                 # Стили для страницы доходов
+│   │       │       └── public/
+│   │       │           ├── authorization/
+│   │       │           │   └── authorization-pages.css     # Стили для страниц авторизации
+│   │       │           ├── error/
+│   │       │           │   └── error-page.css              # Стили для страницы ошибок
+│   │       │           └── home-page.css                   # Стили для главной страницы
+│   │       ├── templates/
+│   │       │   ├── public/
+│   │       │   │   ├── authorization/
+│   │       │   │   │   ├── login-page.html                 # Шаблон страницы входа
+│   │       │   │   │   └── registration-page.html          # Шаблон страницы регистрации
+│   │       │   │   └── error/
+│   │       │   │       └── error-page.html                 # Шаблон страницы ошибок
+│   │       │   └── private/
+│   │       │       ├── account-page.html                   # Шаблон главной страницы аккаунта
+│   │       │       ├── expense-add-page.html               # Шаблон страницы добавления расхода
+│   │       │       ├── expense-page.html                   # Шаблон страницы расходов
+│   │       │       ├── income-add-page.html                # Шаблон страницы добавления дохода
+│   │       │       └── income-page.html                    # Шаблон страницы доходов
+│   │       └── application.properties                      # Основные настройки приложения
 │   └── test/java/org/gouenji/financeapp/                   # Тесты
 ├── pom.xml                                                 # Maven конфигурация
 └── README.md                                               # Основная документация проекта

@@ -87,12 +87,12 @@ public class ExpenseRecordService {
         expenseRecordRepository.save(new ExpenseRecord(category, amount, date, description, userService.getCurrentUser()));
     }
 
-    public void updateRecord(int userId,
+    public void updateRecord(int id,
                              ExpenseCategory category,
                              double amount,
                              LocalDate date,
                              String description){
-        ExpenseRecord record = findRecord(userId);
+        ExpenseRecord record = findRecord(id);
 
         record.setCategory(category);
         record.setAmount(amount);

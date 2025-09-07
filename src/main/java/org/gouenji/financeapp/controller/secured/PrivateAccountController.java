@@ -71,11 +71,11 @@ public class PrivateAccountController {
     }
 
     @PostMapping("/transaction/delete/{id}")
-    public String deleteTransaction(@PathVariable("id") int userId, @RequestParam String type) {
+    public String deleteTransaction(@PathVariable("id") int id, @RequestParam String type) {
         if(type.equals("INCOME")) {
-            incomeRecordService.deleteRecord(userId);
+            incomeRecordService.deleteRecord(id);
         }else if(type.equals("EXPENSE")) {
-            expenseRecordService.deleteRecord(userId);
+            expenseRecordService.deleteRecord(id);
         }else{
             return "redirect:/error";
         }
@@ -114,26 +114,26 @@ public class PrivateAccountController {
     }
 
     @PostMapping("income/delete/{id}")
-    public String deleteIncomeRecord(@PathVariable("id") int userId) {
-        incomeRecordService.deleteRecord(userId);
+    public String deleteIncomeRecord(@PathVariable("id") int id) {
+        incomeRecordService.deleteRecord(id);
         return "redirect:/account/income";
     }
 
     @GetMapping("income/edit/{id}")
-    public String getIncomeEditPage(Model model, @PathVariable("id") int userId) {
-        IncomeRecord incomeRecord = incomeRecordService.findRecord(userId);
+    public String getIncomeEditPage(Model model, @PathVariable("id") int id) {
+        IncomeRecord incomeRecord = incomeRecordService.findRecord(id);
         model.addAttribute("income", incomeRecord);
         model.addAttribute("incomeCategories", IncomeCategory.values());
         return "private/income/income-edit-page";
     }
 
     @PostMapping("income/edit/{id}")
-    public String editIncomeRecord(@PathVariable("id") int userId,
+    public String editIncomeRecord(@PathVariable("id") int id,
                                     @RequestParam IncomeCategory category,
                                     @RequestParam double amount,
                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                     @RequestParam(required = false) String description){
-        incomeRecordService.updateRecord(userId, category, amount, date, description);
+        incomeRecordService.updateRecord(id, category, amount, date, description);
         return "redirect:/account/income";
     }
 
@@ -169,26 +169,26 @@ public class PrivateAccountController {
     }
 
     @PostMapping("expense/delete/{id}")
-    public String deleteExpenseRecord(@PathVariable("id") int userId) {
-        expenseRecordService.deleteRecord(userId);
+    public String deleteExpenseRecord(@PathVariable("id") int id) {
+        expenseRecordService.deleteRecord(id);
         return "redirect:/account/expense";
     }
 
     @GetMapping("expense/edit/{id}")
-    public String getExpenseEditPage(Model model, @PathVariable("id") int userId) {
-        ExpenseRecord expenseRecord = expenseRecordService.findRecord(userId);
+    public String getExpenseEditPage(Model model, @PathVariable("id") int id) {
+        ExpenseRecord expenseRecord = expenseRecordService.findRecord(id);
         model.addAttribute("expense", expenseRecord);
         model.addAttribute("expenseCategories", ExpenseCategory.values());
         return "private/expense/expense-edit-page";
     }
 
     @PostMapping("expense/edit/{id}")
-    public String editExpenseRecord(@PathVariable("id") int userId,
+    public String editExpenseRecord(@PathVariable("id") int id,
                                     @RequestParam ExpenseCategory category,
                                     @RequestParam double amount,
                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                     @RequestParam(required = false) String description){
-        expenseRecordService.updateRecord(userId, category, amount, date, description);
+        expenseRecordService.updateRecord(id, category, amount, date, description);
         return "redirect:/account/expense";
     }
 }

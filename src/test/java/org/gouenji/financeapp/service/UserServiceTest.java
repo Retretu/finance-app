@@ -6,121 +6,163 @@ import org.gouenji.financeapp.entity.enums.users.UserRole;
 import org.gouenji.financeapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@Transactional
-@TestPropertySource(locations = "classpath:application-test.properties")
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    private User user;
+    @InjectMocks
+    private UserService userService;
+
+    private User userTest;
 
     @BeforeEach
-    public void setUp() {
-        user = new User("Ivan",
+    void setUp() {
+        userTest = new User(
+                "Ivan",
                 "test@gmail.com",
                 "1234",
                 UserRole.USER
         );
-        userRepository.save(user);
+        userTest.setId(1);
     }
 
     @Test
-    void findByEmail_ShouldReturnUser_WhenUSerExists() {
-        Optional<User> userFound = userService.findByEmail("test@gmail.com");
+    void findByEmail_ShouldReturnUser_WhenUserExists() {
+        when(userRepository.findByEmailIgnoreCase(this.userTest.getEmail()))
+                .thenReturn(Optional.of(userTest));
+
+        Optional<User> userFound = userService.findByEmail(this.userTest.getEmail());
 
         assertThat(userFound).isPresent();
-
-        User user = userFound.get();
-
-        assertThat(user.getName()).isEqualTo(this.user.getName());
-        assertThat(user.getEmail()).isEqualTo(this.user.getEmail());
-        assertThat(user.getPassword()).isEqualTo(this.user.getPassword());
-        assertThat(user.getUserRole()).isEqualTo(this.user.getUserRole());
+        assertThat(userFound.get().getEmail()).isEqualTo(this.userTest.getEmail());
+        verify(userRepository).findByEmailIgnoreCase(this.userTest.getEmail());
     }
 
     @Test
     void findByEmail_ShouldReturnNull_WhenUserDoesNotExist() {
-        Optional<User> userFound = userService.findByEmail("testAnotherUser@gmail.com");
+        when(userRepository.findByEmailIgnoreCase("another@gmail.com"))
+                .thenReturn(Optional.empty());
+
+        Optional<User> userFound = userService.findByEmail("another@gmail.com");
 
         assertThat(userFound).isEmpty();
+        verify(userRepository).findByEmailIgnoreCase("another@gmail.com");
     }
 
     @Test
-    void loadUserByUsername_ShouldReturnUser_WhenUserExists() {
-        UserDetails userFoundDetails = userService.loadUserByUsername("test@gmail.com");
+    void loadUserByUsername_ShouldReturnUserDetails_WhenUserExists() {
+        when(userRepository.findByEmailIgnoreCase(this.userTest.getEmail()))
+                .thenReturn(Optional.of(userTest));
 
-        assertThat(userFoundDetails).isNotNull();
-        assertThat(userFoundDetails.getUsername()).isEqualTo(this.user.getEmail());
-        assertThat(userFoundDetails.getPassword()).isEqualTo(this.user.getPassword());
-        assertThat(userFoundDetails.getAuthorities())
-                .hasSize(1)
+        UserDetails userDetails = userService.loadUserByUsername(this.userTest.getEmail());
+
+        assertThat(userDetails).isNotNull();
+        assertThat(userDetails.getUsername()).isEqualTo(this.userTest.getEmail());
+        assertThat(userDetails.getPassword()).isEqualTo(this.userTest.getPassword());
+        assertThat(userDetails.getAuthorities())
                 .extracting("authority")
                 .containsExactly("ROLE_USER");
+        verify(userRepository).findByEmailIgnoreCase(this.userTest.getEmail());
     }
 
     @Test
     void loadUserByUsername_ShouldThrowException_WhenUserDoesNotExist() {
 
-        assertThatThrownBy(() -> userService.loadUserByUsername("testAnotherUser@gmail.com"))
+        when(userRepository.findByEmailIgnoreCase("another@gmail.com"))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userService.loadUserByUsername("another@gmail.com"))
                 .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessage("User not found with email: testAnotherUser@gmail.com");
+                .hasMessage("User not found with email: another@gmail.com");
+        verify(userRepository).findByEmailIgnoreCase("another@gmail.com");
     }
 
     @Test
-    @WithMockUser(username = "test@gmail.com")
     void getCurrentUser_ShouldReturnUser_WhenUserExists() {
 
-        User user = userService.getCurrentUser();
+        SecurityContextHolder.getContext().setAuthentication(
+                new TestingAuthenticationToken(this.userTest.getEmail(), null)
+        );
 
-        assertThat(user.getName()).isEqualTo(this.user.getName());
-        assertThat(user.getEmail()).isEqualTo(this.user.getEmail());
-        assertThat(user.getPassword()).isEqualTo(this.user.getPassword());
-        assertThat(user.getUserRole()).isEqualTo(this.user.getUserRole());
+        when(userRepository.findByEmailIgnoreCase(this.userTest.getEmail()))
+                .thenReturn(Optional.of(this.userTest));
+
+        User currentUser = userService.getCurrentUser();
+
+        assertThat(currentUser).isNotNull();
+        assertThat(currentUser.getEmail()).isEqualTo(this.userTest.getEmail());
+        verify(userRepository).findByEmailIgnoreCase(this.userTest.getEmail());
     }
 
     @Test
-    @WithMockUser(username = "testAnotherUser@gmail.com")
     void getCurrentUser_ShouldThrowException_WhenUserDoesNotExist() {
 
+        SecurityContextHolder.getContext().setAuthentication(
+                new TestingAuthenticationToken("another@gmail.com", null)
+        );
+
+        when(userRepository.findByEmailIgnoreCase("another@gmail.com"))
+                .thenReturn(Optional.empty());
+
         assertThatThrownBy(() -> userService.getCurrentUser())
                 .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessage("User not found with email: testAnotherUser@gmail.com");
+                .hasMessage("User not found with email: another@gmail.com");
+        verify(userRepository).findByEmailIgnoreCase("another@gmail.com");
     }
 
     @Test
-    @WithMockUser(username = "test@gmail.com")
     void getCurrentUserId_ShouldReturnId_WhenUserExists() {
 
-        int userId = userService.getCurrentUser().getId();
+        SecurityContextHolder.getContext().setAuthentication(
+                new TestingAuthenticationToken(this.userTest.getEmail(), null)
+        );
 
-        assertThat(userId).isEqualTo(this.user.getId());
+        when(userRepository.findByEmailIgnoreCase(this.userTest.getEmail()))
+                .thenReturn(Optional.of(this.userTest));
 
+        int id = userService.getCurrentUserId();
+
+        assertThat(id).isEqualTo(1);
+        verify(userRepository).findByEmailIgnoreCase(this.userTest.getEmail());
     }
 
     @Test
-    @WithMockUser(username = "testAnotherUser@gmail.com")
     void getCurrentUserId_ShouldThrowException_WhenUserDoesNotExist() {
+
+        SecurityContextHolder.getContext().setAuthentication(
+                new TestingAuthenticationToken("another@gmail.com", null)
+        );
+
+        when(userRepository.findByEmailIgnoreCase("another@gmail.com"))
+                .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.getCurrentUser())
                 .isInstanceOf(UsernameNotFoundException.class)
-                .hasMessage("User not found with email: testAnotherUser@gmail.com");
+                .hasMessage("User not found with email: another@gmail.com");
+        verify(userRepository).findByEmailIgnoreCase("another@gmail.com");
+    }
 
+    @Test
+    void save_ShouldCallRepositorySave(){
+        userService.save(userTest);
+
+        verify(userRepository).save(userTest);
     }
 
 }

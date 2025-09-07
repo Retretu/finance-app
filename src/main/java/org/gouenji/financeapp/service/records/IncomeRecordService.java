@@ -1,5 +1,6 @@
 package org.gouenji.financeapp.service.records;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.gouenji.financeapp.entity.records.IncomeRecord;
 import org.gouenji.financeapp.dto.records.IncomeRecordsContainer;
 import org.gouenji.financeapp.entity.enums.records.IncomeCategory;
@@ -75,7 +76,8 @@ public class IncomeRecordService {
     }
 
     public IncomeRecord findRecord(int id){
-        return incomeRecordRepository.findById(id).orElse(null);
+        return incomeRecordRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Income record not found with id: " + id));
     }
 
     public void saveRecord(IncomeCategory category,
@@ -85,12 +87,12 @@ public class IncomeRecordService {
         incomeRecordRepository.save(new IncomeRecord(category, amount, date, description, userService.getCurrentUser()));
     }
 
-    public void updateRecord(int userId,
+    public void updateRecord(int id,
                              IncomeCategory category,
                              double amount,
                              LocalDate date,
                              String description){
-        IncomeRecord record = findRecord(userId);
+        IncomeRecord record = findRecord(id);
 
         record.setCategory(category);
         record.setAmount(amount);

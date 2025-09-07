@@ -139,7 +139,7 @@ public class IncomeRecordServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnAllRecordsContainer_WhenFilterModeIsAllCategories() {
+    void findAll_ShouldReturnAllIncomeRecordsContainer_WhenFilterModeIsAllCategories() {
         List<IncomeRecord> mockAllRecords = Arrays.asList(incomeRecordTest1, incomeRecordTest2, incomeRecordTest3);
         List<IncomeRecord> mockMonthRecords = Arrays.asList(incomeRecordTest1, incomeRecordTest2);
         when(userService.getCurrentUserId()).thenReturn(userTest.getId());
@@ -167,7 +167,7 @@ public class IncomeRecordServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnFilteredRecordsContainer_WhenFilterModeIsValidCategory() {
+    void findAll_ShouldReturnFilteredIncomeRecordsContainer_WhenFilterModeIsValidCategory() {
         List<IncomeRecord> mockAllRecords = Arrays.asList(incomeRecordTest1, incomeRecordTest2, incomeRecordTest3);
         List<IncomeRecord> mockMonthRecords = Arrays.asList(incomeRecordTest1, incomeRecordTest2);
         when(userService.getCurrentUserId()).thenReturn(userTest.getId());
@@ -201,7 +201,7 @@ public class IncomeRecordServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnAllRecordsContainer_WhenFilterModeIsInvalidCategory() {
+    void findAll_ShouldReturnAllIncomeRecordsContainer_WhenFilterModeIsInvalidCategory() {
         List<IncomeRecord> mockAllRecords = Arrays.asList(incomeRecordTest1, incomeRecordTest2, incomeRecordTest3);
         List<IncomeRecord> mockMonthRecords = Arrays.asList(incomeRecordTest1, incomeRecordTest2);
         when(userService.getCurrentUserId()).thenReturn(userTest.getId());

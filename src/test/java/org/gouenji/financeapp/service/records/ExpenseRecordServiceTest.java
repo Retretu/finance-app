@@ -6,7 +6,6 @@ import org.gouenji.financeapp.entity.User;
 import org.gouenji.financeapp.entity.enums.records.ExpenseCategory;
 import org.gouenji.financeapp.entity.enums.users.UserRole;
 import org.gouenji.financeapp.entity.records.ExpenseRecord;
-import org.gouenji.financeapp.entity.records.IncomeRecord;
 import org.gouenji.financeapp.repository.ExpenseRecordRepository;
 import org.gouenji.financeapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;

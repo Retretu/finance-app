@@ -8,6 +8,7 @@ import org.gouenji.financeapp.service.UserService;
 import org.gouenji.financeapp.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,24 +56,29 @@ public class PublicAuthorizationController {
                         @RequestParam String password,
                         HttpServletResponse response) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = userService.loadUserByUsername(email);
+            UserDetails userDetails = userService.loadUserByUsername(email);
 
-        String token = jwtTokenUtil.generateToken(userDetails);
+            String token = jwtTokenUtil.generateToken(userDetails);
 
-        Cookie jwtCookie = new Cookie("jwt_token", token);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(false);
-        jwtCookie.setPath("/");
-        jwtCookie.setMaxAge((int) jwtTokenUtil.getLifetime().getSeconds());
-        response.addCookie(jwtCookie);
+            Cookie jwtCookie = new Cookie("jwt_token", token);
+            jwtCookie.setHttpOnly(true);
+            jwtCookie.setSecure(false);
+            jwtCookie.setPath("/");
+            jwtCookie.setMaxAge((int) jwtTokenUtil.getLifetime().getSeconds());
+            response.addCookie(jwtCookie);
 
-        return "redirect:/account";
+            return "redirect:/account";
+        } catch (BadCredentialsException e) {
+            return "redirect:/login?error";
+        }
+
     }
 
     @PostMapping("/registration")

@@ -77,7 +77,6 @@ class PublicAuthorizationControllerTest {
 
     @Test
     void getLoginPage_ShouldReturnLoginPageView_WithoutError() throws Exception {
-        // Act & Assert
         mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("public/authorization/login-page"))
